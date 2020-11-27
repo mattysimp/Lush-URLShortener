@@ -7,11 +7,12 @@ import (
 // Routes creates router and handlers and sets routes to handler receivers
 // Input: Store
 // Output: *chi.mux
-func Routes(store URLStore) *chi.Mux {
+func Routes(store URLStore, config *Config) *chi.Mux {
 	r := chi.NewRouter()
 
 	h := urlHandler{
-		store: store,
+		store:  store,
+		config: config,
 	}
 
 	r.Route("", func(r chi.Router) {
