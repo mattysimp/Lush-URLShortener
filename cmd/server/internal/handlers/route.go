@@ -15,8 +15,8 @@ func Routes(store URLStore, config *Config) *chi.Mux {
 		config: config,
 	}
 
-	r.Route("", func(r chi.Router) {
-		r.Get("/{URL}", h.GetLongURL)
+	r.Route("/", func(r chi.Router) {
+		r.Get("/{code}", h.GetLongURL)
 		r.Post("/", h.CreateShortURL)
 	})
 	return r
