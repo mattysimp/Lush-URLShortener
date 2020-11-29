@@ -1,6 +1,10 @@
 package handlers
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
+
 	"github.com/go-chi/chi"
 )
 
@@ -20,4 +24,20 @@ func Routes(store URLStore, config *Config) *chi.Mux {
 		r.Post("/", h.CreateShortURL)
 	})
 	return r
+}
+
+func ReadConfig(file string) (*Config, error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	fmt.Println(f)
+	var cfg Config
+	decoder := json.NewDecoder(f)
+	err = decoder.Decode(&cfg)
+	if err != nil {
+		return nil, err
+	}
+	return &cfg, nil
 }

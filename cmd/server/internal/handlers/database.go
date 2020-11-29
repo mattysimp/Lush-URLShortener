@@ -9,20 +9,18 @@ import (
 
 // MongoStore holds the mongodb session
 type MongoStore struct {
-	session  *mgo.Session
-	dbConfig database
+	session *mgo.Session
+	col     mgo.Collection
 }
 
 func (ms *MongoStore) SetURL(url *URL) (err error) {
-	col := ms.session.DB(ms.dbConfig.DBName).C(ms.dbConfig.Collection)
-	err = col.Insert(url)
+	err = ms.col.Insert(url)
 	return err
 }
 
 func (ms *MongoStore) GetURL(code string) (url *URL, err error) {
-	col := ms.session.DB(ms.dbConfig.DBName).C(ms.dbConfig.Collection)
 	url = &URL{}
-	err = col.FindId(code).One(url)
+	err = ms.col.FindId(code).One(url)
 	if err != nil {
 		return nil, errors.New("url not found")
 	}
@@ -43,5 +41,5 @@ func NewDB(config *Config) *MongoStore {
 		panic(err)
 	}
 
-	return &MongoStore{session, config.Database}
+	return &MongoStore{session, *session.DB(config.Database.DBName).C(config.Database.Collection)}
 }
