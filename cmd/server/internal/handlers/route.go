@@ -9,8 +9,6 @@ import (
 )
 
 // Routes creates router and handlers and sets routes to handler receivers
-// Input: Store
-// Output: *chi.mux
 func Routes(store URLStore, config *Config) *chi.Mux {
 	r := chi.NewRouter()
 
@@ -26,6 +24,7 @@ func Routes(store URLStore, config *Config) *chi.Mux {
 	return r
 }
 
+// ReadConfig creates Config struct from inputted file
 func ReadConfig(file string) (*Config, error) {
 	f, err := os.Open(file)
 	if err != nil {

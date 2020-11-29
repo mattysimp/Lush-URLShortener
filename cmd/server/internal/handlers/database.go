@@ -13,11 +13,13 @@ type MongoStore struct {
 	col     mgo.Collection
 }
 
+// SetURL adds the url to the database with id as the short code
 func (ms *MongoStore) SetURL(url *URL) (err error) {
 	err = ms.col.Insert(url)
 	return err
 }
 
+// GetURL returns the URL from database
 func (ms *MongoStore) GetURL(code string) (url *URL, err error) {
 	url = &URL{}
 	err = ms.col.FindId(code).One(url)

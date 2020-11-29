@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-// createURLHandler holds the storing facility for the createURLs
+// urlHandler holds the storing facility for the createURLs
 type urlHandler struct {
 	store  URLStore
 	config *Config
@@ -37,14 +37,15 @@ func (h *urlHandler) GetLongURL(w http.ResponseWriter, r *http.Request) {
 
 // CreateShortURL creates and returns a short URL of a given URL
 func (h *urlHandler) CreateShortURL(w http.ResponseWriter, r *http.Request) {
-	// Makes URL from json content in request body
-	var createURL URL
 
+	// Checks for request body
 	if r.Body == nil {
-		http.Error(w, fmt.Sprintf("Nil Request Payload"), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("Nil Request Body"), http.StatusBadRequest)
 		return
 	}
 
+	// Makes URL from json content in request body
+	var createURL URL
 	if err := json.NewDecoder(r.Body).Decode(&createURL); err != nil {
 		http.Error(w, fmt.Sprintf("Failed to unmarshal request, %v", err), http.StatusBadRequest)
 		return
@@ -81,7 +82,6 @@ func (h *urlHandler) CreateShortURL(w http.ResponseWriter, r *http.Request) {
 // and the amendment value is incremented and the new value is tried again.
 func (h *urlHandler) CreateUniqueHash(createURL *URL, amendment *uint64) (needSetting bool) {
 	for {
-		// Retrieve createURL from DB
 		strAmendment := strconv.FormatUint(*amendment, 36)
 
 		createURL.GenerateShortURL(h.config, strAmendment)

@@ -8,6 +8,7 @@ import (
 
 func main() {
 
+	// Get Config
 	config, err := handlers.ReadConfig("config.json")
 	if err != nil {
 		panic(err)
